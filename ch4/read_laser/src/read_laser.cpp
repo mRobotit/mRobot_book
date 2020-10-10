@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     try
     {
         read_laser_test::ReadLaser laser(port,baud_rate,io);
-        ros::Publisher laser_pub = nh.advertise<sensor_msgs::LaserScan> ("read_laser",1000);
+        ros::Publisher laser_pub = nh.advertise<sensor_msgs::LaserScan> ("scan",1000);
         ros::Publisher motor_pub = nh.advertise<std_msgs::UInt16>("rpms", 1000);
         while (ros::ok())
         {
