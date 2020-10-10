@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg = "read_laser" type = "read_laser" name = "read_laser" output = "screen">
+        <param name="port" value="/dev/ttyUSB0"/>
+    </node>
+</launch>
