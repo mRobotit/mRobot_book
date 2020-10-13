@@ -21,4 +21,4 @@ int main(int argc, char** argv)
 	// 显示服务调用结果
 	ROS_INFO("Show person result : %s", srv.response.result.c_str());
 	return 0;
-};
+}

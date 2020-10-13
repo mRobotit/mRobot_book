@@ -1,9 +1,9 @@
 #include <actionlib/client/simple_action_client.h>
-#include "learning_action/ReadBookAction.h"
+#include "learning_action/readbookAction.h"
  
 //action完成后调用此函数
 void doneCb(const actionlib::SimpleClientGoalState& state,
-            const actionlib_demo::ReadBookResultConstPtr& result)
+            const learning_action::readbookResultConstPtr& result)
 {
     ROS_INFO("Finsh Reading!");
     //任务完成就关闭节点
@@ -11,12 +11,12 @@ void doneCb(const actionlib::SimpleClientGoalState& state,
 }
  
 //action的目标任务发送给server且开始执行时，调用此函数
-void activeCb{
+void activeCb(){
    ROS_INFO("Goal is active! Begin to Read.");
 }
  
 //action任务在执行过程中，server对过程有反馈则调用此函数
-void feedbackCb(const actionlib_demo::ReadBookFeedbackConstPtr& feedback)
+void feedbackCb(const learning_action::readbookFeedbackConstPtr& feedback)
 {
     //将服务器的反馈输出（读到第几页书）
     ROS_INFO("Reading page: %d", feedback->reading_page);
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 ros::init(argc, argv, "readbook_client");
  
     //创建一个action的client，指定action名称为”read_book”
-    actionlib::SimpleActionClient<actionlib_demo::ReadBookAction> client("read_book", true);
+    actionlib::SimpleActionClient<learning_action::readbookAction> client("read_book", true);
  
     ROS_INFO("Waiting for action server to start");
     //等待服务器响应
@@ -35,7 +35,7 @@ ros::init(argc, argv, "readbook_client");
     ROS_INFO("Action server started");
     
     //创建一个目标：读10页书
-    actionlib_demo::ReadBookGoal goal;
+    learning_action::readbookGoal goal;
     goal.total_pages = 10;
     
     //把action的任务目标发送给服务器，绑定上面定义的各种回调函数
