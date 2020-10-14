@@ -1,0 +1,7 @@
+<launch>
+    <node pkg = "read_camera" type="read_image" name="read_image" output="screen">
+        <rosparam file="$(find read_camera)/cfg/param.yaml" command="load"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz"/>
+</launch>

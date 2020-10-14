@@ -1,0 +1,5 @@
+image_dev: /dev/video0
+save_path: /home/huanyu/datasets/camera
+
+save: false
+visualization: true
