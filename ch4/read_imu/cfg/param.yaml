@@ -1,0 +1,10 @@
+imu_dev: /dev/ttyUSB0
+baud_rate: 9600
+data_bits: 8
+parity: N
+stop_bits: 1
+pub_data_topic: imu_data
+pub_temp_topic: imu_temp
+yaw_topic: yaw_data
+link_name: base_imu_link
+pub_hz: 10
