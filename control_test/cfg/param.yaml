@@ -1,0 +1,13 @@
+
+rotation_angle: 180
+rotation_vel: 3
+distance1: 1
+distance2: 1
+go_vel: 0.2
+
+
+KP: 0.02
+KI: 0.0000105
+KD: 0.002
+
+

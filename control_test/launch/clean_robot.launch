@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <!--启动导航节点-->
+    <include file="$(find control_test)/launch/navigation_slam.launch">
+    </include>
+    <!--启动路径规划器-->
+    <node pkg ="control_test" type="path_planning_node" respawn="false" name="path_planning_node" output="screen" clear_params="true">
+        <rosparam file = "$(find control_test)/param/costmap_common_params.yaml" command="load" ns="cleaning_costmap"/>
+        <rosparam file = "$(find control_test)/param/cleaning_costmap_params.yaml" command="load"/>
+    </node>
+    <!--启动目标点发布器-->
+    <param name="/NextGoal/tolerance_goal" value="0.25" />
+    <node pkg="control_test" type="next_goal" respawn="true" name="next_goal" output="screen" />
+
+
+
+</launch>
