@@ -1,0 +1,38 @@
+Log at : 2020/11/9|08:57:36|GMT+0800
+
+Log at : 2020/11/9|08:58:48|GMT+0800
+
+Log at : 2020/11/9|09:03:09|GMT+0800
+
+Log at : 2020/11/9|09:03:16|GMT+0800
+
+Log at : 2020/11/9|09:42:49|GMT+0800
+
+[SyntaxError: Unexpected token ] in JSON at position 551
+	at JSON.parse (<anonymous>)
+	at I.updateCppProperties (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:9921)
+	at I.<anonymous> (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:11492)
+	at Generator.next (<anonymous>)
+	at c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:4542
+	at new Promise (<anonymous>)
+	at r (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:4287)
+	at I.load (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:10382)
+	at x.<anonymous> (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:8182)
+	at Generator.next (<anonymous>)
+	at a (c:\Users\code8\.vscode\extensions\cl.keil-assistant-1.6.2\dist\extension.js:1:4344)
+	at runMicrotasks (<anonymous>)
+	at processTicksAndRejections (internal/process/task_queues.js:94:5)]
+Log at : 2020/11/11|09:01:29|GMT+0800
+
+Log at : 2020/11/11|14:47:33|GMT+0800
+
+Log at : 2020/11/12|14:05:53|GMT+0800
+
+Log at : 2020/11/13|13:27:34|GMT+0800
+
+Log at : 2020/11/13|15:21:05|GMT+0800
+
+Log at : 2020/11/19|14:31:02|GMT+0800
+
+Log at : 2020/11/19|14:32:02|GMT+0800
+
