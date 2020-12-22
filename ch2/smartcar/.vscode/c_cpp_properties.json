@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/mrobot/catkin_workspace/devel/include",
+        "/opt/ros/melodic/include",
+        "/home/mrobot/smartcar/src/smartcar/include",
+        "/usr/include"
+      ],
+      "name": "Linux"
+    }
+  ]
+}

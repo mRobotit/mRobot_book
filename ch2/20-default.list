@@ -1,9 +1,0 @@
-yaml https://hansteam.coding.net/p/rosdeap_mirror/d/rosdeap_mirror/git/raw/master/osx-homebrew.yaml osx
-
-yaml https://hansteam.coding.net/p/rosdeap_mirror/d/rosdeap_mirror /git/raw/master/base.yaml
-
-yaml https://hansteam.coding.net/p/rosdeap_mirror/d/rosdeap_mirror /git/raw/master/python.yaml
-
-yaml https://hansteam.coding.net/p/rosdeap_mirror/d/rosdeap_mirror /git/raw/master/ruby.yaml gbpdistro
-
-yaml https://raw.githubusercontent.com/ros/rosdistro/master/releas es/fuerte.ymal fuerte

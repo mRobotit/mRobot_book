@@ -1,0 +1,8 @@
+#Define the goal
+uint32 total_pages 
+---
+#Define the result
+bool is_finish
+---
+#Define a feedback message
+uint32 reading_page
