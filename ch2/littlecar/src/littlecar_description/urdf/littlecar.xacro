@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<robot name="smartcar">
+	<link name="base_link">
+		<visual>
+			<geometry>
+				<cylinder length="0.02" radius="0.25" />
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<material name="blue">
+				<color rgba="0 .5 .8 1" />
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length="0.02" radius="0.25" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1.0" />
+			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
+		</inertial>
+	</link>
+	<link name="dummy">
+	</link>
+	<joint name="dummy_joint" type="fixed">
+		<parent link="dummy" />
+		<child link="base_link" />
+	</joint>
+	<gazebo reference="base_link">
+		<material>
+			Gazebo/Blue
+		</material>
+	</gazebo>
+	<link name="front_wheel">
+		<visual>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1.0" />
+			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
+		</inertial>
+	</link>
+	<joint name="front_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="front_wheel" />
+		<origin rpy="1.57075 0 0" xyz="0.2 0 -0.03" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>
+	<gazebo reference="front_wheel">
+		<material>
+			Gazebo/Black
+		</material>
+	</gazebo>
+	<link name="right_back_wheel">
+		<visual>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1.0" />
+			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
+		</inertial>
+	</link>
+	<joint name="right_back_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="right_back_wheel" />
+		<origin rpy="1.57075 0 0" xyz="-0.1 0.1 -0.03" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>
+	<gazebo reference="right_back_wheel">
+		<material>
+			Gazebo/Black
+		</material>
+	</gazebo>
+	<link name="left_back_wheel">
+		<visual>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1.0" />
+			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
+		</inertial>
+	</link>
+	<joint name="left_back_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="left_back_wheel" />
+		<origin rpy="1.57075 0 0" xyz="-0.1 -0.1 -0.03" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>
+	<gazebo reference="left_back_wheel">
+		<material>
+			Gazebo/Black
+		</material>
+	</gazebo>
+	<gazebo>
+		<plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+			<rosDebugLevel>
+				na
+			</rosDebugLevel>
+			<commandTopic>
+				cmd_vel
+			</commandTopic>
+			<odometryTopic>
+				odom
+			</odometryTopic>
+			<odometryFrame>
+				odom
+			</odometryFrame>
+			<publishWheelTF>
+				false
+			</publishWheelTF>
+			<publishOdomTF>
+				true
+			</publishOdomTF>
+			<wheelAcceleration>
+				0
+			</wheelAcceleration>
+			<wheelTorque>
+				5
+			</wheelTorque>
+			<updateRate>
+				100
+			</updateRate>
+			<odometrySource>
+				1
+			</odometrySource>
+			<publishTf>
+				1
+			</publishTf>
+			<leftJoint>
+				left_back_wheel_joint
+			</leftJoint>
+			<rightJoint>
+				right_back_wheel_joint
+			</rightJoint>
+			<robotBaseFrame>
+				base_link
+			</robotBaseFrame>
+			<wheelSeparation>
+				0.14
+			</wheelSeparation>
+			<wheelDiameter>
+				0.05
+			</wheelDiameter>
+			<legacyMode>
+				true
+			</legacyMode>
+			<publishWheelJointState>
+				true
+			</publishWheelJointState>
+		</plugin>
+	</gazebo>
+	<joint name="laser_joint" type="fixed">
+		<axis xyz="0 1 0" />
+		<origin xyz="0 0 0.030" rpy="0 0 0" />
+		<parent link="base_link" />
+		<child link="laser_link" />
+	</joint>
+	<link name="laser_link">
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.02 .03 .03" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="0.02 .03 .03" />
+			</geometry>
+		</visual>
+		<inertial>
+			<mass value="0.1" />
+			<inertia ixx="0.000010833" iyy="0.000010833" izz="0.000015" ixy="0" ixz="0" iyz="0" />
+		</inertial>
+	</link>
+	<gazebo reference="laser_link">
+		<material>
+			Gazebo/Black
+		</material>
+	</gazebo>
+	<gazebo reference="laser_link">
+		<sensor type="ray" name="head_velodyne_sensor">
+			<pose>
+				0 0 0 0 0 0
+			</pose>
+			<visualize>
+				true
+			</visualize>
+			<update_rate>
+				40
+			</update_rate>
+			<ray>
+				<scan>
+					<horizontal>
+						<samples>
+							40
+						</samples>
+						<resolution>
+							1
+						</resolution>
+						<min_angle>
+							0
+						</min_angle>
+						<max_angle>
+							1.57
+						</max_angle>
+					</horizontal>
+					<vertical>
+						<samples>
+							40
+						</samples>
+						<resolution>
+							1
+						</resolution>
+						<min_angle>
+							-${15.0*3.14125/180.0}
+						</min_angle>
+						<max_angle>
+							${15.0*3.14125/180.0}
+						</max_angle>
+					</vertical>
+				</scan>
+				<range>
+					<min>
+						0.10
+					</min>
+					<max>
+						60.0
+					</max>
+					<resolution>
+						0.02
+					</resolution>
+				</range>
+			</ray>
+			<plugin name="gazebo_ros_head_velodyne_controller" file-name="libgazebo_ros_ velodyne_laser.so">
+				<frameName>
+					laser_link
+				</frameName>
+				<topicName>
+					velodyne_pointcloud
+				</topicName>
+			</plugin>
+		</sensor>
+	</gazebo>
+</robot>

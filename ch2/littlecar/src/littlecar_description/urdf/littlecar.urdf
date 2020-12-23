@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="smartcar">
+	<link name="base_link">
+		<visual>
+			<geometry>
+				<cylinder length="0.02" radius="0.25" />
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<material name="blue">
+				<color rgba="0 .5 .8 1" />
+			</material>
+		</visual>
+	</link>
+    <link name ="front_wheel">
+        <visual>
+            <!-- <origin xyz="0.2 0 -0.03" rpy="0 0 0"/> -->
+            <geometry>
+                <sphere radius="0.025"/>
+            </geometry>
+            <material name="Cyan">
+                <color rgba="0 1 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="front_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="front_wheel" />
+		<!-- <origin rpy="0 0 0" xyz="0 0 0" /> -->
+        <origin rpy="0 0 0" xyz="0.2 0 0" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>   
+	<link name="right_back_wheel">
+		<visual>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+	</link>
+	<joint name="right_back_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="right_back_wheel" />
+		<origin rpy="1.57075 0 0" xyz="-0.1 0.1 -0.03" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>
+
+	<link name="left_back_wheel">
+		<visual>
+			<geometry>
+				<cylinder length=".02" radius="0.025" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+	</link>
+	<joint name="left_back_wheel_joint" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="left_back_wheel" />
+		<origin rpy="1.57075 0 0" xyz="-0.1 -0.1 -0.03" />
+		<limit effort="100" velocity="100" />
+		<joint_properties damping="0.0" friction="0.0" />
+	</joint>
+	
+</robot>

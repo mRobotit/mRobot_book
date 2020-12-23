@@ -1,0 +1,19 @@
+<launch>
+    <arg name="littlecar"/>
+    <arg name="gui" default="False"/>
+    <!-- 加载机器人模型 -->
+    <param name="robot_description" textfile="$(find littlecar_description)/urdf/littlecar.urdf"/>
+    <param name="use_gui" value="$(arg gui)"/>
+    <!--启动arbotix模拟器-->
+    <node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output = "screen">
+        <rosparam file="$(find littlecar_description)/config/littlecar_arbotix.yaml" command="load" />
+        <param name="sim" value="true"/>
+    </node>
+    <!--运行joint_state_publisher节点，发布机器人关节状态-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type = "joint_state_publisher" >
+    </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <!-- 在rviz中加载机器人模型-->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find littlecar_description)/rviz/urdf.rviz" />
+</launch>

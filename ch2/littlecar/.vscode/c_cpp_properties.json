@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/bupt/clean_robot/devel/include",
+        "/home/bupt/catkin_ws/devel/include",
+        "/opt/ros/melodic/include",
+        "/usr/include"
+      ],
+      "name": "Linux"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<package>
+  <description brief="littlecar_description">
+
+     littlecar_description
+
+  </description>
+  <author>bupt</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/littlecar_description</url>
+  <depend package="urdf"/>
+
+</package>
