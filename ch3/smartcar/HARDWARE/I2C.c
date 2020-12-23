@@ -2,7 +2,7 @@
  * 
  *   Website	: http://www.mrobotit.cn/
  * 	 Author 	: Xiao Dong
- * 	 Description: i2c应用函数库
+ * 	 Description: i2c应用函数库，
  * 	 Date		: 2020/11
  * 	 
  */
@@ -25,7 +25,7 @@ static void I2C_delay(void)
     while (i)
         i--;
 }
-
+//I2C开始信号
 static bool I2C_Start(void)
 {
     SDA_H;
@@ -41,7 +41,7 @@ static bool I2C_Start(void)
     I2C_delay();
     return true;
 }
-
+//I2C结束信号
 static void I2C_Stop(void)
 {
     SCL_L;
@@ -53,7 +53,7 @@ static void I2C_Stop(void)
     SDA_H;
     I2C_delay();
 }
-
+//产生ACK信号函数
 static void I2C_Ack(void)
 {
     SCL_L;
@@ -65,7 +65,7 @@ static void I2C_Ack(void)
     SCL_L;
     I2C_delay();
 }
-
+//不产生ACK信号
 static void I2C_NoAck(void)
 {
     SCL_L;
@@ -77,7 +77,7 @@ static void I2C_NoAck(void)
     SCL_L;
     I2C_delay();
 }
-
+//等待ACK信号函数
 static bool I2C_WaitAck(void)
 {
     SCL_L;
@@ -93,7 +93,7 @@ static bool I2C_WaitAck(void)
     SCL_L;
     return true;
 }
-
+//I2C发送byte
 static void I2C_SendByte(uint8_t byte)
 {
     uint8_t i = 8;
@@ -111,7 +111,7 @@ static void I2C_SendByte(uint8_t byte)
     }
     SCL_L;
 }
-
+//I2C接受byte
 static uint8_t I2C_ReceiveByte(void)
 {
     uint8_t i = 8;
@@ -131,11 +131,10 @@ static uint8_t I2C_ReceiveByte(void)
     SCL_L;
     return byte;
 }
-
+//I2C协议初始化
 void i2cInit(void)
 {
     GPIO_InitTypeDef gpio;
-	//已更改
 	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB , ENABLE);    
     gpio.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
     gpio.GPIO_Speed = GPIO_Speed_2MHz;
@@ -143,7 +142,7 @@ void i2cInit(void)
     GPIO_Init(GPIOB, &gpio);
 
 }
-
+//写入函数
 bool i2cWriteBuffer(uint8_t addr, uint8_t reg, uint8_t len, uint8_t * data)
 {
     int i;
@@ -166,7 +165,7 @@ bool i2cWriteBuffer(uint8_t addr, uint8_t reg, uint8_t len, uint8_t * data)
     I2C_Stop();
     return true;
 }
-/////////////////////////////////////////////////////////////////////////////////
+//写入函数
 int8_t i2cwrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t * data)
 {
 	if(i2cWriteBuffer(addr,reg,len,data))
@@ -177,8 +176,8 @@ int8_t i2cwrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t * data)
 	{
 		return FALSE;
 	}
-	//return FALSE;
 }
+//读取函数
 int8_t i2cread(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf)
 {
 	if(i2cRead(addr,reg,len,buf))
@@ -189,9 +188,8 @@ int8_t i2cread(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf)
 	{
 		return FALSE;
 	}
-	//return FALSE;
 }
-//////////////////////////////////////////////////////////////////////////////////
+//写入函数
 bool i2cWrite(uint8_t addr, uint8_t reg, uint8_t data)
 {
     if (!I2C_Start())
@@ -208,7 +206,7 @@ bool i2cWrite(uint8_t addr, uint8_t reg, uint8_t data)
     I2C_Stop();
     return true;
 }
-
+//读取函数
 bool i2cRead(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf)
 {
     if (!I2C_Start())

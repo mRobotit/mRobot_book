@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2020-11-11 08:34:02
- * @LastEditTime: 2020-11-19 17:03:54
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \USERc:\smartcar-project\HARDWARE\timer.c
- */
 /**
  * 
  *   Website	: http://www.mrobotit.cn/
@@ -32,7 +24,7 @@ void Timerx_Init(u16 arr,u16 psc)
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE); //TIM1时钟使能
 
-	TIM_TimeBaseStructure.TIM_Period = arr; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	 计数到500为50ms
+	TIM_TimeBaseStructure.TIM_Period = arr; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	 计数到100为10ms
 	TIM_TimeBaseStructure.TIM_Prescaler = psc; //设置用来作为TIMx时钟频率除数的预分频值  10Khz的计数频率  
 	TIM_TimeBaseStructure.TIM_ClockDivision = 1; //设置时钟分割:TDTS = Tck_tim
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
@@ -51,23 +43,25 @@ void Timerx_Init(u16 arr,u16 psc)
 	NVIC_Init(&NVIC_InitStructure);  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器
 							 
 }
-unsigned int Safeware_Count = 0;
+//extern unsigned int Safeware_Count = 0;
 void TIM1_UP_IRQHandler(void)   //TIM1中断
 {
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) //检查指定的TIM1中断发生与否:TIM1 中断源 
 		{
 			TIM_ClearITPendingBit(TIM1, TIM_IT_Update);  //清除TIMx的中断待处理位:TIM1 中断源 
-			
-		(Safeware_Count >= 42949672) ?(Safeware_Count=0) : (Safeware_Count++);	//时间基数常数
-		
 		//在pid参数整定时，打开电机运动
-	/*	if(Safeware_Count == 50)
-			Kinematics_Positive(0.2, 0.0);		//正向启动
+		//(Safeware_Count >= 42949672) ?(Safeware_Count=0) : (Safeware_Count++);	//时间基数常数
+		
+		
+		/*if(Safeware_Count == 50)
+			Kinematics_Positive(0.5, 0.0);		//正向启动
 		if(Safeware_Count == 100)
-			Kinematics_Positive(-0.2, 0.0);	//反向切换
+			Kinematics_Positive(-0.5, 0.0);	//反向切换
 		if(Safeware_Count == 150)
 			Kinematics_Positive(0.0, 0.0);		//反向停止
-		*/
-	  }
+	 */	
+		//每10ms采样一次左右电机速度
+		Robot_Encoder_Get_CNT();
+	}
 }
 

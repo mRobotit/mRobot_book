@@ -43,11 +43,13 @@ extern Upload_Data Send_Data, Recive_Data;
 
 void USART1_Config(void); 
 
-void USART1_SendChar(unsigned char b);
+void USART3_Config(void); 
 
-void USART1_Printf(USART_TypeDef* USARTx, uint8_t *Data,...);
+void USART_SendChar(USART_TypeDef *USARTx,unsigned char b);
 
-void USART1_Send_Byte(unsigned char byte) ;
+void USART_Printf(USART_TypeDef* USARTx, uint8_t *Data,...);
+
+void USART1_Send_Byte(USART_TypeDef *USARTx,unsigned char byte);
 
 void PrintChar(char *s);
 

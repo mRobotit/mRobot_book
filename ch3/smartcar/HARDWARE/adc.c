@@ -68,10 +68,10 @@ u16 Get_Adc(u8 ch)
 	return ADC_GetConversionValue(ADC1);	//返回最近一次ADC1规则组的转换结果
 }
 	 
-
+//获取电压
 float Get_Valtage()
 {
-	return Get_Adc(0)*3.3f/4096.0f/0.16393f;
+	return Get_Adc(0)* 13.3f/4096.0f-0.2f;
 }
 
 

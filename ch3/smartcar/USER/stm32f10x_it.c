@@ -23,7 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
-#include "delay.h"
+
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
   */
@@ -132,12 +132,8 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
-#include "encoder.h"
 void SysTick_Handler(void)
 {
-if(1==1){
-Robot_Encoder_Get_CNT();
-}
 }
 
 /******************************************************************************/

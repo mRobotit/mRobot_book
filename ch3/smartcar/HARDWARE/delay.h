@@ -3,9 +3,6 @@
 
 #include "stm32f10x.h"
 
-//void delay_us(u32 n);
-void delayTime(u32 times);
-
 void delay_us(u32 nus);
 void delay_ms(u16 nms);
 void delay_S(u16 ns);
