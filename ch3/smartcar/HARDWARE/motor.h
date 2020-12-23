@@ -19,8 +19,8 @@ extern Moto_Info Left_moto;
 extern Moto_Info Right_moto;
 	
 
-#define ESC_OUTPUT_PWM_LIMT 800
-#define CONTROL_TIMER_CYCLE			0.05f	
+#define ESC_OUTPUT_PWM_LIMT 900
+#define CONTROL_TIMER_CYCLE			0.01f	
 #define Pi						3.1415f
 #define Base_Width					0.155f
 #define ROBOT_INITIATIVE_DIAMETER_L 0.065f
@@ -29,7 +29,7 @@ extern Moto_Info Right_moto;
 #define MOTO_LEFT		1
 #define MOTO_RIGHT		2
 
-void TIM2_PWM_Init(void);
+void TIM1_PWM_Init(void);
 
 void MOTOR_GPIO_Config(void);
 

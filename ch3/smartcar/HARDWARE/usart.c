@@ -12,7 +12,7 @@
 #include "motor.h"
 
 Upload_Data Send_Data, Recive_Data;
-
+//USART1设置
 void USART1_Config(void)
 {
     //变量声明
@@ -42,54 +42,57 @@ void USART1_Config(void)
 
     USART_Cmd(USART1, ENABLE);
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-    
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);   
+
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
     NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 4;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 }
-
-void Kinematics_Positive(float vx,float vz)
+//运动学逆解
+void Kinematics_Positive(float vx, float vz)
 {
-	if(vx == 0.0f){			//原地旋转或静止
-		Right_moto.Target_Speed = vz * Base_Width / 2.0f;
-		Left_moto.Target_Speed  = (-1) * Right_moto.Target_Speed;
-	}
-	else if(vz == 0.0f){	//静止或者前后运动
-		Right_moto.Target_Speed = Left_moto.Target_Speed = vx;
-	}	
-	else{					//在前进或者后退过程中转弯
-		Left_moto.Target_Speed  = vx - vz * Base_Width / 2.0f;
-		Right_moto.Target_Speed = vx + vz * Base_Width / 2.0f;
-	}
-
-}
-unsigned char Rcount = 0;
-void USART1_IRQHandler(void)
-{
-     USART_SendData(USART1,1);
-    if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
-    {
-
-				Recive_Data.buffer[Rcount] = USART_ReceiveData(USART1);
-				(Recive_Data.buffer[0] == 0xFe)?(Rcount++):(Rcount = 0);
-				if (Rcount == PROTOCL_DATA_SIZE)	//验证数据包的长度
-				{
-					if(Recive_Data.Sensor_Info.Header == PROTOCOL_HEADER)	//验证数据包的头部校验信息
-					{
-						if(Recive_Data.Sensor_Info.End_flag == PROTOCOL_END)	//验证数据包的尾部校验信息
-						{
-							//接收上位机控制命令，使机器人产生相应的运动
-							Kinematics_Positive(Recive_Data.Sensor_Info.X_speed, Recive_Data.Sensor_Info.Z_speed);
-						}
-					}
-					Rcount = 0;
-				}
+    if (vx == 0.0f)
+    { //原地旋转或静止
+        Right_moto.Target_Speed = vz * Base_Width / 2.0f;
+        Left_moto.Target_Speed = (-1) * Right_moto.Target_Speed;
+    }
+    else if (vz == 0.0f)
+    { //静止或者前后运动
+        Right_moto.Target_Speed = Left_moto.Target_Speed = vx;
+    }
+    else
+    { //在前进或者后退过程中转弯
+        Left_moto.Target_Speed = vx - vz * Base_Width / 2.0f;
+        Right_moto.Target_Speed = vx + vz * Base_Width / 2.0f;
     }
 }
-
+//USART3中断函数
+unsigned char Rcount = 0;
+void USART3_IRQHandler(void)
+{
+    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+    {
+        Recive_Data.buffer[Rcount] = USART_ReceiveData(USART3);
+        (Recive_Data.buffer[0] == 0xFe) ? (Rcount++) : (Rcount = 0);
+        if (Rcount == PROTOCL_DATA_SIZE)
+					//验证数据包的长度
+        {
+            if (Recive_Data.Sensor_Info.Header == PROTOCOL_HEADER) 
+							//验证数据包的头部校验信息
+            {
+                if (Recive_Data.Sensor_Info.End_flag == PROTOCOL_END) //验证数据包的尾部校验信息
+                {
+                    //接收上位机控制命令，使机器人产生相应的运动
+                    Kinematics_Positive(Recive_Data.Sensor_Info.X_speed, Recive_Data.Sensor_Info.Z_speed);
+                }
+            }
+            Rcount = 0;
+        }
+    }
+}
+//将整数转为字符串
 static char *itoa(int value, char *string, int radix)
 {
     int i, d;
@@ -137,14 +140,8 @@ static char *itoa(int value, char *string, int radix)
     return string;
 }
 
-void USART1_SendChar(unsigned char b)
-{
-    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
-        ;
-    USART_SendData(USART1, b);
-}
-
-void USART1_Printf(USART_TypeDef *USARTx, uint8_t *Data, ...)
+//串口打印函数
+void USART_Printf(USART_TypeDef *USARTx, uint8_t *Data, ...)
 {
     const char *s;
     int d;
@@ -211,61 +208,97 @@ void USART1_Printf(USART_TypeDef *USARTx, uint8_t *Data, ...)
             ;
     }
 }
-
-void USART1_Send_Byte(unsigned char byte)
+//串口写入函数
+void USART_Send_Byte(USART_TypeDef *USARTx, unsigned char byte)
 {
-    USART_SendData(USART1, byte);
-    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) != SET);
+    USART_SendData(USARTx, byte);
+    while (USART_GetFlagStatus(USARTx, USART_FLAG_TC) != SET)
+        ;
 }
-
+//打印字符串数组 ，适配DMP库
 void PrintChar(char *s)
 {
-	//USART1_SendChar(s);
-	char *p;
-	p=s;
-	while(*p != '\0')
-	{
-		USART1_Send_Byte(*p);
-		p++;
-	}
-}
-
-
-void Usart_putbuff(uint8_t *data,uint32_t size)
-{
-    uint8_t i=0;
-    for(;i<size;i++)
+    char *p;
+    p = s;
+    while (*p != '\0')
     {
-        USART1_Send_Byte(*(data+i));
+        USART_Send_Byte(USART3, *p);
+        p++;
+    }
+}
+//串口调试专用
+void Usart_putbuff(uint8_t *data, uint32_t size)
+{
+    uint8_t i = 0;
+    for (; i < size; i++)
+    {
+        USART_Send_Byte(USART3, *(data + i));
+    }
+}
+//串口调试专用
+void Vcan_sendware(uint8_t *wareaddr, uint32_t waresize)
+{
+    uint8_t cmdf[2] = {0x03, 0xfc}; //串口调试 使用的前命令
+    uint8_t cmdr[2] = {0xfc, 0x03}; //串口调试 使用的后命令
+
+    Usart_putbuff(cmdf, sizeof(cmdf)); //先发送前命令
+    Usart_putbuff(wareaddr, waresize); //发送数据
+    Usart_putbuff(cmdr, sizeof(cmdr)); //发送后命令
+}
+//将协议发送给上位机
+void Usart_SendTo_Ubuntu()
+{
+    unsigned char i = 0;
+    Send_Data.Sensor_Info.Header = PROTOCOL_HEADER;
+    Send_Data.Sensor_Info.End_flag = PROTOCOL_END;
+
+    Send_Data.Sensor_Info.X_speed = (Left_moto.Current_Speed + Right_moto.Current_Speed) / 2.0f;
+    Send_Data.Sensor_Info.Y_speed = 0.0;
+    Send_Data.Sensor_Info.Z_speed = (Left_moto.Current_Speed - Right_moto.Current_Speed) / Base_Width;
+
+    for (i = 0; i < PROTOCL_DATA_SIZE; i++)
+    {
+
+        USART_Send_Byte(USART3, Send_Data.buffer[i]);
     }
 }
 
-
-void Vcan_sendware(uint8_t *wareaddr, uint32_t waresize)
+void USART3_Config(void)
 {
-    uint8_t cmdf[2] = {0x03, 0xfc};    //串口调试 使用的前命令
-    uint8_t cmdr[2] = {0xfc, 0x03};    //串口调试 使用的后命令
 
-    Usart_putbuff(cmdf, sizeof(cmdf));    //先发送前命令
-    Usart_putbuff(wareaddr, waresize);    //发送数据
-    Usart_putbuff(cmdr, sizeof(cmdr));    //发送后命令
+    GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure; //定义串口初始化结构体
+    NVIC_InitTypeDef NVIC_InitStructure;
+
+    /* USART3时钟 */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+    /* GPIOB时钟 */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    /* USART3 GPIO 配置 */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    /*串口配置 */
+    USART_InitStructure.USART_BaudRate = 115200;                                    //波特率9600
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;                     //8位数据
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;                          //1个停止位
+    USART_InitStructure.USART_Parity = USART_Parity_No;                             //无校验位
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; //禁用RTSCTS硬件流控制
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;                 //使能发送接收
+
+    USART_Init(USART3, &USART_InitStructure);
+		//串口中断配置
+    USART_Cmd(USART3, ENABLE);
+		USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 }
-
-
-void Usart_SendTo_Ubuntu()
-{
-	unsigned char i = 0;
-	Send_Data.Sensor_Info.Header   = PROTOCOL_HEADER;
-	Send_Data.Sensor_Info.End_flag = PROTOCOL_END;
-	
-	Send_Data.Sensor_Info.X_speed = (Left_moto.Current_Speed + Right_moto.Current_Speed)/2.0f;
-	Send_Data.Sensor_Info.Y_speed = 0.0;
-	Send_Data.Sensor_Info.Z_speed = (Left_moto.Current_Speed - Right_moto.Current_Speed)/Base_Width;
-	
-	
-	for(i=0; i<PROTOCL_DATA_SIZE; i++)
-	{
-		USART1_SendChar(Send_Data.buffer[i]);
-	}
-}
-

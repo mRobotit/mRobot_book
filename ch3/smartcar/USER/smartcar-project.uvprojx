@@ -398,6 +398,16 @@
               <FileType>2</FileType>
               <FilePath>.\startup_stm32f10x_md.s</FilePath>
             </File>
+            <File>
+              <FileName>system_stm32f10x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\system_stm32f10x.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\stm32f10x_conf.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -407,11 +417,6 @@
               <FileName>core_cm3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CORE\core_cm3.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_stm32f10x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CORE\system_stm32f10x.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -569,11 +574,6 @@
               <FilePath>..\HARDWARE\adc.c</FilePath>
             </File>
             <File>
-              <FileName>encoder.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\encoder.c</FilePath>
-            </File>
-            <File>
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\motor.c</FilePath>
@@ -582,6 +582,11 @@
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\encoder.c</FilePath>
             </File>
           </Files>
         </Group>

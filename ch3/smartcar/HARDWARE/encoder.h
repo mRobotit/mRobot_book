@@ -1,6 +1,6 @@
 #include "stm32f10x.h"
 
-#define  ENCODER_COUNT_VALUE	   1560.0f
+#define  ENCODER_COUNT_VALUE	   60000.0f
 void Left_Encoder_Init(void);
 
 void Right_Encoder_Init(void);

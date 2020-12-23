@@ -24,12 +24,12 @@ unsigned char more;
 long quat[4];
 
 
- 
+//MPU6050初始化
 void MPU6050_Init(void)
 {
 	int result=0;
-	//IIC_Init();
 	result=mpu_init();
+	//如果MPU初始化成功，开始初始化DMP
 	if(!result)
 	{	 		 
 	
@@ -44,7 +44,7 @@ void MPU6050_Init(void)
 			PrintChar("mpu_configure_fifo complete ......\n");
 		else
 			PrintChar("mpu_configure_fifo come across error ......\n");
-
+		//采样率为100
 		if(!mpu_set_sample_rate(DEFAULT_MPU_HZ))	   	  		//mpu_set_sample_rate
 		 PrintChar("mpu_set_sample_rate complete ......\n");
 		else
@@ -72,8 +72,7 @@ void MPU6050_Init(void)
 		else
 		 	PrintChar("dmp_set_fifo_rate come across error ......\n");
 
-		run_self_test();		//�Լ�
-
+		run_self_test();		
 		if(!mpu_set_dmp_state(1))
 		 	PrintChar("mpu_set_dmp_state complete ......\n");
 		else
@@ -84,20 +83,10 @@ void MPU6050_Init(void)
 
 void MPU6050_Pose(void)
 {
-	
+	//fifo方式读取数据
 	dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more);	 
-	/* Gyro and accel data are written to the FIFO by the DMP in chip frame and hardware units.
-	 * This behavior is convenient because it keeps the gyro and accel outputs of dmp_read_fifo and mpu_read_fifo consistent.
-	**/
-	/*if (sensors & INV_XYZ_GYRO )
-	send_packet(PACKET_TYPE_GYRO, gyro);
-	if (sensors & INV_XYZ_ACCEL)
-	send_packet(PACKET_TYPE_ACCEL, accel); */
-	/* Unlike gyro and accel, quaternions are written to the FIFO in the body frame, q30.
-	 * The orientation is set by the scalar passed to dmp_set_orientation during initialization. 
-	**/
 	
-	
+	//计算欧拉角
 	if(sensors & INV_WXYZ_QUAT )
 	{
 		q0 = quat[0] / q30;	
@@ -108,7 +97,14 @@ void MPU6050_Pose(void)
 		Pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3;	// pitch
 		Roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)*57.3;	// roll
 		Yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;	//yaw
-    
 		
 	}
+	//写入发送协议
+	Send_Data.Sensor_Info.Imu_Acc.X_data = accel[0];
+	Send_Data.Sensor_Info.Imu_Acc.Y_data = accel[1];
+	Send_Data.Sensor_Info.Imu_Acc.Z_data = accel[2];
+	
+	Send_Data.Sensor_Info.Imu_Gyro.X_data = gyro[0];
+	Send_Data.Sensor_Info.Imu_Gyro.X_data = gyro[1];
+	Send_Data.Sensor_Info.Imu_Gyro.X_data = gyro[2];
 }
