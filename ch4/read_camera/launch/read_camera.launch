@@ -3,5 +3,4 @@
         <rosparam file="$(find read_camera)/cfg/param.yaml" command="load"/>
     </node>
 
-    <node pkg="rviz" type="rviz" name="rviz"/>
 </launch>

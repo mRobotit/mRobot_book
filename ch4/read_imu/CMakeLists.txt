@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(read_camera)
+project(read_imu)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
-
-set(OpenCV_DIR /usr/share/OpenCV)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -12,12 +10,8 @@ set(OpenCV_DIR /usr/share/OpenCV)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
-  std_msgs
-  cv_bridge
-  image_transport
-  OpenCV
+  dynamic_reconfigure
 )
-
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -76,7 +70,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   sensors_msgs
+#   std_msgs  # Or other packages containing msgs
 # )
 
 ################################################
@@ -110,8 +104,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES read_camera
-#  CATKIN_DEPENDS roscpp sensors_msgs
+#  LIBRARIES read_imu
+#  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
 
@@ -122,14 +116,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  ${PROJECT_SOURCE_DIR}/include
+  include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/read_camera.cpp
+#   src/${PROJECT_NAME}/read_imu.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -140,8 +133,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(read_image src/save_image.cpp src/read_camera.cpp)
-target_link_libraries(read_image ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_executable(${PROJECT_NAME} src/serial_data.cpp src/read_imu.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -154,9 +146,9 @@ target_link_libraries(read_image ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -205,7 +197,7 @@ target_link_libraries(read_image ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_read_camera.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_read_imu.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

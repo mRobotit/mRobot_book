@@ -1,7 +1,7 @@
 #include<ros/ros.h>
 #include<sensor_msgs/CameraInfo.h>
 #include<opencv2/opencv.hpp>
-#include"camera_manager.h"
+#include"read_camera.h"
 using namespace cv;
 
 
