@@ -1,0 +1,6 @@
+<launch>
+    <arg name="map_file" default="$(find cafe_robot)/map/cafe_house.yaml"/>
+    <node name="map_server_for_test" pkg="map_server" type="map_server" args="$(arg map_file)">
+    </node>
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom 50"/>
+</launch>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="smartcar">
+<robot name="smartcar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<link name="base_link">
 		<visual>
 			<geometry>
@@ -31,102 +31,54 @@
 			Gazebo/Blue
 		</material>
 	</gazebo>
-	<link name="front_wheel">
-		<visual>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-			<material name="black">
-				<color rgba="0 0 0 1" />
+
+    	<xacro:macro name="cylinder_inertial_matrix" params="m r h">
+        	<inertial>
+            	<mass value="${m}" />
+            	<inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
+                	iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
+                	izz="${m*r*r/2}" /> 
+        	</inertial>
+    	</xacro:macro>
+	
+	<xacro:macro name="wheel" params="prefix x y z">
+		<link name="${prefix}_wheel">
+			<visual>
+				<geometry>
+					<cylinder length=".02" radius="0.025" />
+				</geometry>
+				<material name="black">
+					<color rgba="0 0 0 1" />
+				</material>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length=".02" radius="0.025" />
+				</geometry>
+			</collision>
+			<xacro:cylinder_inertial_matrix m="1.0" r="0.025" h="0.02" />
+		</link>
+
+		<joint name="${prefix}_wheel_joint" type="continuous">
+			<axis xyz="0 0 1" />
+			<parent link="base_link" />
+			<child link="${prefix}_wheel" />
+			<origin rpy="1.57075 0 0" xyz="${x} ${y} ${z}" />
+			<limit effort="100" velocity="100" />
+			<joint_properties damping="0.0" friction="0.0" />
+		</joint>
+
+		<gazebo reference="${prefix}_wheel">
+			<material>
+				Gazebo/Black
 			</material>
-		</visual>
-		<collision>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-		</collision>
-		<inertial>
-			<mass value="1.0" />
-			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
-		</inertial>
-	</link>
-	<joint name="front_wheel_joint" type="continuous">
-		<axis xyz="0 0 1" />
-		<parent link="base_link" />
-		<child link="front_wheel" />
-		<origin rpy="1.57075 0 0" xyz="0.2 0 -0.03" />
-		<limit effort="100" velocity="100" />
-		<joint_properties damping="0.0" friction="0.0" />
-	</joint>
-	<gazebo reference="front_wheel">
-		<material>
-			Gazebo/Black
-		</material>
-	</gazebo>
-	<link name="right_back_wheel">
-		<visual>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-			<material name="black">
-				<color rgba="0 0 0 1" />
-			</material>
-		</visual>
-		<collision>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-		</collision>
-		<inertial>
-			<mass value="1.0" />
-			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
-		</inertial>
-	</link>
-	<joint name="right_back_wheel_joint" type="continuous">
-		<axis xyz="0 0 1" />
-		<parent link="base_link" />
-		<child link="right_back_wheel" />
-		<origin rpy="1.57075 0 0" xyz="-0.1 0.1 -0.03" />
-		<limit effort="100" velocity="100" />
-		<joint_properties damping="0.0" friction="0.0" />
-	</joint>
-	<gazebo reference="right_back_wheel">
-		<material>
-			Gazebo/Black
-		</material>
-	</gazebo>
-	<link name="left_back_wheel">
-		<visual>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-			<material name="black">
-				<color rgba="0 0 0 1" />
-			</material>
-		</visual>
-		<collision>
-			<geometry>
-				<cylinder length=".02" radius="0.025" />
-			</geometry>
-		</collision>
-		<inertial>
-			<mass value="1.0" />
-			<inertia ixx="0.0054" iyy="0.0073" izz="0.0023" ixy="0" ixz="0" iyz="0" />
-		</inertial>
-	</link>
-	<joint name="left_back_wheel_joint" type="continuous">
-		<axis xyz="0 0 1" />
-		<parent link="base_link" />
-		<child link="left_back_wheel" />
-		<origin rpy="1.57075 0 0" xyz="-0.1 -0.1 -0.03" />
-		<limit effort="100" velocity="100" />
-		<joint_properties damping="0.0" friction="0.0" />
-	</joint>
-	<gazebo reference="left_back_wheel">
-		<material>
-			Gazebo/Black
-		</material>
-	</gazebo>
+		</gazebo>
+	</xacro:macro>
+
+	<xacro:wheel prefix="front" x="0.2" y="0" z="-0.03" />
+	<xacro:wheel prefix="right_back" x="-0.1" y="0.1" z="-0.03"/>
+	<xacro:wheel prefix="left_back" x="-0.1" y="-0.1" z="-0.03" />
+
 	<gazebo>
 		<plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 			<rosDebugLevel>
@@ -268,7 +220,7 @@
 					</resolution>
 				</range>
 			</ray>
-			<plugin name="gazebo_ros_head_velodyne_controller" file-name="libgazebo_ros_ velodyne_laser.so">
+			<plugin name="gazebo_ros_head_velodyne_controller" filename="libgazebo_ros_velodyne_laser.so">
 				<frameName>
 					laser_link
 				</frameName>

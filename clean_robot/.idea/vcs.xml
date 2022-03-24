@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/src/hector_slam" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/turtlebot3" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/turtlebot3_msgs" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/turtlebot3_simulations" vcs="Git" />
-  </component>
-</project>

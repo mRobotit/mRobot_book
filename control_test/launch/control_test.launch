@@ -1,7 +1,0 @@
-<launch>
-  <arg name="go_param" default="$(find control_test)/cfg/param.yaml" />
-
-  <node pkg="control_test" type="control_test" name="control_test" output="screen">
-    <rosparam file="$(arg go_param)" command="load" />
-  </node>
-</launch>

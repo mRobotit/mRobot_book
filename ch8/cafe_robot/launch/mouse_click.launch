@@ -1,0 +1,7 @@
+<launch>
+    <arg name="map_file" default="$(find cafe_robot)/map/robot.yaml"/>
+    <node name="map_server_for_test" pkg="map_server" type="map_server" args="$(arg map_file)">
+    </node>
+
+    <node  pkg="cafe_robot" type="mouse_click"  name="mouse_click" output="screen"/>
+</launch>

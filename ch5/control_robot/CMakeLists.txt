@@ -132,6 +132,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(control_line src/control_line.cpp)
+ add_executable(control_line_withPID src/control_line_withPID.cpp)
  add_executable(control_rotation src/control_rotation.cpp)
  add_executable(show_trajectory src/show_trajectory.cpp)
 ## Rename C++ executable without prefix
@@ -146,6 +147,9 @@ include_directories(
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(control_line
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(control_line_withPID
   ${catkin_LIBRARIES}
 )
 target_link_libraries(control_rotation

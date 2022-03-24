@@ -34,7 +34,9 @@ using namespace std;
 
 #define RECIVER_DATA_HEADER 		0XFEFEFEFE
 #define RECIVER_DATA_CHECK_SUM 		0XEE
-#define PROTOBUF_SIZE				33
+//#define PROTOBUF_SIZE				33
+#define PROTOCL_DATA_SIZE 			49
+#define PROTOCL_CONTROL_DATA_SIZE 	25
 
 #define PI 					3.1415926f	
 #define GYROSCOPE_RADIAN	0.001064f	// gyro_x/(16.40*57.30)=gyro_x*0.001064 单位为弧度每秒
@@ -77,33 +79,84 @@ const double odom_twist_covariance2[36] = {1e-9, 0, 0, 0, 0, 0,
 										0, 0, 0, 0, 0, 1e-9};
 
 #pragma pack(1)
-typedef struct __Mpu6050_Str_
+typedef struct
 {
 	short X_data;
 	short Y_data;
 	short Z_data;
-}Mpu6050_Str;
+}Imu_Info;
 
-typedef union _Upload_Data_   
+typedef union   
 {
-	unsigned char buffer[PROTOBUF_SIZE];
-	
-	struct _Sensor_Str_
+	unsigned char buffer[PROTOCL_DATA_SIZE];
+	struct
 	{
 		unsigned int Header;
-		float X_speed;
+		float X_speed;			
 		float Y_speed;
 		float Z_speed;
+		float Adc_Voltage;
 		
-		float Source_Voltage;
 		
-		Mpu6050_Str Link_Accelerometer;
-		Mpu6050_Str Link_Gyroscope;
+		float quat_x;
+		float quat_y;
+		float quat_z;
+		float quat_w;
+		
+		Imu_Info Imu_Acc;
+		Imu_Info Imu_Gyro;
+		
 		
 		unsigned char End_flag;
-	}Sensor_Str;
-}Upload_Data;
+	}Sensor_Info;
+}Board_data;
+
+typedef union   
+{
+	unsigned char buffer[PROTOCL_CONTROL_DATA_SIZE];
+	struct
+	{
+		unsigned int Header;
+		unsigned int kp;
+		unsigned int ki;
+		unsigned int kd;
+		float X_speed;			
+		float Z_speed;
+		unsigned char End_flag;
+	}Control_Info;
+}Control_data;
+
+
 #pragma pack(4)
+
+// #pragma pack(1)
+// typedef struct __Mpu6050_Str_
+// {
+// 	short X_data;
+// 	short Y_data;
+// 	short Z_data;
+// }Mpu6050_Str;
+
+// typedef union _Upload_Data_   
+// {
+// 	unsigned char buffer[PROTOBUF_SIZE];
+	
+// 	struct _Sensor_Str_
+// 	{
+// 		unsigned int Header;
+// 		float X_speed;
+// 		float Y_speed;
+// 		float Z_speed;
+		
+// 		float Source_Voltage;
+		
+// 		Mpu6050_Str Link_Accelerometer;
+// 		Mpu6050_Str Link_Gyroscope;
+		
+// 		unsigned char End_flag;
+// 	}Sensor_Str;
+// }Upload_Data;
+// #pragma pack(4)
 
 
 class Mrobotit_start_object
@@ -119,9 +172,9 @@ class Mrobotit_start_object
 
 
 		/* Read/Write data from ttyUSB */
-		bool ReadFormUart();
-		bool WriteToUart(unsigned char*){}
-		bool ReadAndWriteLoopProcess();
+		bool ReadFromUart();
+		bool WriteToUart(unsigned char*);
+		void ReadAndWriteLoopProcess();
 
 		/* This node Publisher topic and tf */
 		void PublisherOdom();
@@ -150,7 +203,9 @@ class Mrobotit_start_object
 		ros::Publisher odom_pub, imu_pub, imu_pub_raw, power_pub,scan_pub;
 		tf::TransformBroadcaster odom_broadcaster;
 
-		Upload_Data Reciver_Str, Send_Str;         
+		//Upload_Data Reciver_Str, Send_Str;         
+		Board_data Reciver_Str;
+		Control_data Send_Str;
 
 		/* Odom and tf value*/
 		double x, y, th, vx, vy, vth, dt;
